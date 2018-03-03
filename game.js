@@ -10,6 +10,7 @@ columns.forEach(function(column) {
 
 console.log(cats);
 
+// Add a click event listener to each cell.
 cats.forEach(function(group) {
 	group.forEach(function(cat) {
 		cat.addEventListener('click', function() {
@@ -19,6 +20,9 @@ cats.forEach(function(group) {
 	})
 });
 
+// Listen for key press events.
+// D Key: Toggle Double Jeopardy
+// S Key: Toggle Subtract mode
 document.addEventListener('keydown', function(e) {
 	if (e.keyCode === 68) {
 		toggleDoubleJeopardy();
@@ -27,6 +31,8 @@ document.addEventListener('keydown', function(e) {
 	}
 });
 
+// Add a click event listener to each header.
+// This will be used for manual score updates.
 headers.forEach(function(header) {
 	header.addEventListener('click', function() {
 		var how;
@@ -45,19 +51,30 @@ headers.forEach(function(header) {
 	});
 });
 
+// Add the score to the proper player
 function adjustScore(column, adjustmnet) {
+	// Grab the score cell from this column of the board, and parse the current score.
 	var scoreDisplay = column.querySelector('.header').querySelector('h1');
 	var score = parseInt(scoreDisplay.textContent);
+
+	// Handle the arithmetic.
 	if (subtractMode) {
 		score -= adjustmnet;
 	} else {
 		score += adjustmnet;
 	}
+
+	// Update the score display.
 	scoreDisplay.textContent = score.toString();
 }
 
+// Switch between single and double jeopardy.
 function toggleDoubleJeopardy() {
+	// Determine the factor depending on if we are switching from double
+	// to single jeopardy, or single to double jeopardy.
 	var factor = doubleJeopardy ? 0.5 : 2;
+
+	// Multiply every point value in the table by the factor.
 	cats.forEach(function(group) {
 		group.forEach(function(cat) {
 			var display = cat.querySelector('h3');
@@ -65,11 +82,17 @@ function toggleDoubleJeopardy() {
 			display.textContent = score.toString();
 		});
 	});
+
+	// Invert the double jeopardy flag.
 	doubleJeopardy = !doubleJeopardy;
 }
 
+// Switch between normal and subtract mode.
 function toggleSubtract() {
+	// Invert the subtract mode flag.
 	subtractMode = !subtractMode;
+
+	// Swap the subtract id to give text the proper color.
 	cats.forEach(function(group) {
 		group.forEach(function(cat) {
 			var display = cat.querySelector('h3');
